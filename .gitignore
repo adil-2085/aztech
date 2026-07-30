@@ -1,0 +1,24 @@
+# .gitignore
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+env/
+
+# Django
+*.log
+local_settings.py
+db.sqlite3
+db.sqlite3-journal
+
+# Media Files (User uploaded content shouldn't be in Git)
+media/
+
+# Environment Variables (Where you should store your DB passwords eventually)
+.env
+
+# IDE settings
+.vscode/
+.idea/
