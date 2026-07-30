@@ -1,10 +1,10 @@
 from django.urls import path
-# from . import views  # Uncomment when you have views ready
+from . import views
 
-# Set an app namespace to easily resolve URLs later (e.g., 'store:home')
 app_name = 'store'
 
 urlpatterns = [
-    # Leave this empty for now until we write the views
-    # Example: path('', views.home, name='home'),
+    # Point the root URL of the store app to our new view
+    path('', views.storefront_home, name='home'),
+    path('api/products/', views.ProductListAPIView.as_view(), name='product-api'),
 ]
