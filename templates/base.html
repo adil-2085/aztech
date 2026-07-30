@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{{ store_settings.brand_name|default:"Loom" }}{% endblock %}</title>
+    
+    <!-- 1. LOAD THE STATIC TAG -->
+    {% load static %}
+    
+    <!-- Load Tailwind CSS via CDN for rapid styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- 2. LINK YOUR CUSTOM CSS FILE -->
+    <link rel="stylesheet" href="{% static 'css/main.css' %}">
+    
+    <!-- Tailwind Configuration -->
+                        // Using a clean sans-serif stack to mimic geometric editorial fonts
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                    },
+                    colors: {
+                        // The ASOS "Action" Red for sales/urgency
+                        'asos-red': '#d01345',
+                        // Stark blacks and whites
+                        'asos-black': '#2d2d2d',
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <!-- Material Icons for UI elements (cart, profile, search) -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+</head>
+<body class="bg-white text-asos-black flex flex-col min-h-screen">
+        /* Custom CSS to hide scrollbars but keep functionality (often used in horizontal product sliders) */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+</head>
+<body class="bg-white text-asos-black font-sans antialiased flex flex-col min-h-screen">
+
+    <!-- Top Utility Bar (Black) -->
+    <div class="bg-asos-black text-white text-xs font-semibold py-2 px-4 flex justify-between items-center tracking-wide">
+        <div class="hidden sm:block">
+            <a href="#" class="hover:text-gray-300 transition mr-4">Marketplace</a>
+            <a href="#" class="hover:text-gray-300 transition">Help & FAQs</a>
+        </div>
+        <div class="text-center flex-grow sm:flex-grow-0">
+            <!-- Example of the ASOS urgency color -->
+            <span class="text-white">UP TO 50% OFF COLD WEATHER WINS</span>
+        </div>
+        <div class="hidden sm:flex items-center gap-4">
+            <a href="#" class="hover:text-gray-300 transition flex items-center gap-1">
+                <span class="material-icons text-[16px]">language</span> UK | £
+            </a>
+        </div>
+    </div>
+
+    <!-- Main Navbar (White) -->
+    <header class="border-b border-gray-200 sticky top-0 bg-white z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                
+                <!-- Left: Logo & Core Categories -->
+                <div class="flex items-center gap-8">
+                    <!-- Brand Name (Dynamic) or Logo Image -->
+                    <a href="/" class="text-3xl font-black tracking-tighter uppercase flex items-center gap-2">
+                        <!-- 3. HOW TO USE A STATIC IMAGE -->
+                        <!-- <img src="{% static 'img/logo.png' %}" alt="Logo" class="h-8"> -->
+                        {{ store_settings.brand_name|default:"LOOM" }}
+                    </a>
+                    
+                    <!-- Desktop Categories -->
+                    <nav class="hidden md:flex gap-6 h-16">
+                        <!-- Active state styling (thick bottom border) -->
+                        <a href="#" class="flex items-center h-full px-2 text-sm font-bold tracking-wider uppercase border-b-2 border-asos-black hover:text-gray-600 transition">Women</a>
+                        <a href="#" class="flex items-center h-full px-2 text-sm font-bold tracking-wider uppercase border-b-2 border-transparent hover:border-gray-300 hover:text-gray-600 transition">Men</a>
+                    </nav>
+                </div>
+
+                <!-- Middle: Search Bar (Hidden on small screens) -->
+                <div class="hidden md:flex flex-1 max-w-xl mx-8 relative">
+                    <input type="text" placeholder="Search for items and brands" class="w-full bg-gray-100 text-sm rounded-full py-2.5 pl-5 pr-10 focus:outline-none focus:ring-2 focus:ring-gray-200 focus:bg-white transition">
+                    <span class="material-icons absolute right-3 top-2.5 text-gray-500">search</span>
+                </div>
+
+                <!-- Right: Icons (Profile, Saved, Cart) -->
+                <div class="flex items-center gap-4 sm:gap-6">
+                    <a href="#" class="hover:bg-gray-100 p-2 rounded-full transition relative group">
+                        <span class="material-icons text-gray-700 group-hover:text-black">person_outline</span>
+                        <!-- Dropdown stub for Dashboard access -->
+                        <div class="absolute right-0 mt-2 w-48 bg-white border border-gray-200 shadow-lg rounded-md hidden group-hover:block">
+                            <div class="p-4">
+                                <p class="text-sm font-bold">Sign In | Join</p>
+                                <hr class="my-2">
+                                <p class="text-sm hover:text-gray-600 cursor-pointer">My Account</p>
+                                <p class="text-sm hover:text-gray-600 cursor-pointer mt-2">My Orders</p>
+                                <!-- Role-based rendering logic goes here later -->
+                                <p class="text-sm text-blue-600 font-bold hover:text-blue-800 cursor-pointer mt-2">ERP Dashboard</p>
+                            </div>
+                        </div>
+                    </a>
+                    <a href="#" class="hover:bg-gray-100 p-2 rounded-full transition">
+                        <span class="material-icons text-gray-700 hover:text-black">favorite_border</span>
+                    </a>
+                    <a href="#" class="hover:bg-gray-100 p-2 rounded-full transition relative">
+                        <span class="material-icons text-gray-700 hover:text-black">shopping_bag</span>
+                        <!-- Mock Cart Badge -->
+                        <span class="absolute top-1 right-1 bg-black text-white text-[10px] font-bold h-4 w-4 rounded-full flex items-center justify-center">2</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Mobile Search Bar (Visible only on small screens) -->
+        <div class="md:hidden border-t border-gray-200 p-3 bg-gray-50">
+            <div class="relative">
+                <input type="text" placeholder="Search for items and brands" class="w-full bg-white border border-gray-300 text-sm rounded-full py-2 pl-4 pr-10 focus:outline-none focus:ring-1 focus:ring-black">
+                <span class="material-icons absolute right-3 top-2 text-gray-500">search</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="flex-grow">
+        <!-- 
+            This is where specific page templates (like index.html) will inject their content.
+            Django uses {% block content %}{% endblock %} to achieve this.
+        -->
+        {% block content %}
+        <!-- Default fallback content if block is empty -->
+        <div class="flex items-center justify-center h-64 text-gray-400">Content loading...</div>
+        {% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-100 border-t border-gray-200 mt-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div>
+                    <h4 class="font-bold text-gray-900 uppercase tracking-wider text-sm mb-4">Help & Information</h4>
+                    <ul class="space-y-2 text-sm text-gray-600">
+                        <li><a href="#" class="hover:text-black transition">Help</a></li>
+                        <li><a href="#" class="hover:text-black transition">Track order</a></li>
+                        <li><a href="#" class="hover:text-black transition">Delivery & returns</a></li>
+                        <li><a href="#" class="hover:text-black transition">Sitemap</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-bold text-gray-900 uppercase tracking-wider text-sm mb-4">About {{ store_settings.brand_name|default:"Loom" }}</h4>
+                    <ul class="space-y-2 text-sm text-gray-600">
+                        <li><a href="#" class="hover:text-black transition">About us</a></li>
+                        <li><a href="#" class="hover:text-black transition">Careers at {{ store_settings.brand_name|default:"Loom" }}</a></li>
+                        <li><a href="#" class="hover:text-black transition">Corporate responsibility</a></li>
+                        <li><a href="#" class="hover:text-black transition">Investors' site</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-bold text-gray-900 uppercase tracking-wider text-sm mb-4">More from {{ store_settings.brand_name|default:"Loom" }}</h4>
+                    <ul class="space-y-2 text-sm text-gray-600">
+                        <li><a href="#" class="hover:text-black transition">Mobile and ASOS apps</a></li>
+                        <li><a href="#" class="hover:text-black transition">Marketplace</a></li>
+                        <li><a href="#" class="hover:text-black transition">Gift vouchers</a></li>
+                        <li><a href="#" class="hover:text-black transition">Black Friday</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-bold text-gray-900 uppercase tracking-wider text-sm mb-4">Shopping from:</h4>
+                    <div class="flex items-center gap-2 text-sm text-gray-600 cursor-pointer hover:text-black transition">
+                        <span>You're in</span>
+                        <span class="font-bold border-b border-gray-400 pb-0.5">UK | Change</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Bottom Bar -->
+        <div class="bg-gray-200 py-4">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row justify-between items-center text-xs text-gray-600">
+                <p>&copy; 2026 {{ store_settings.brand_name|default:"Loom" }}</p>
+                <div class="flex gap-4 mt-2 sm:mt-0">
+                    <a href="#" class="hover:text-black transition">Privacy & Cookies</a>
+                    <a href="#" class="hover:text-black transition">Ts&Cs</a>
+                    <a href="#" class="hover:text-black transition">Accessibility</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- 3. LINK YOUR CUSTOM JAVASCRIPT FILE -->
+    <script src="{% static 'js/main.js' %}"></script>
+</body>
+</html>
