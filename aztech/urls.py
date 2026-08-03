@@ -4,15 +4,12 @@ from django.conf import settings
 from django.conf.urls.static import static
 
 urlpatterns = [
-    # ... your existing paths ...
+    path('admin/', admin.site.urls),
+    path('dashboard/', include('dashboard.urls')),
     path('', include('store.urls')),
 ]
 
-# This allows Django to serve uploaded MEDIA files locally during development
-if settings.DEBUG:
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-    # You can also add static files here if needed, but Django handles them automatically in DEBUG mode
-    # urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
-# This allows Django to serve uploaded images (like product photos) locally
+# Serve uploaded MEDIA files locally during development.
+# (STATIC_URL doesn't need an entry here — django.contrib.staticfiles handles it automatically while DEBUG=True.)
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

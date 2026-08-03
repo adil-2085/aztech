@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils.text import slugify
 import uuid
 
 # ==========================================
@@ -7,21 +8,33 @@ import uuid
 
 class WorkflowState(models.Model):
     """
-    Our native replacement for django-river. 
-    Allows Super Admins to dynamically create states (e.g., "Pending", "Shipped") 
+    Our native replacement for django-river.
+    Allows Super Admins to dynamically create states (e.g., "Pending", "Shipped")
     from the dashboard without writing code.
+
+    Field shape mirrors django-river's own State model (the `river_state`
+    table: label, slug, description, date_created, date_updated). Like
+    django-river, states are a universal, shared pool — not scoped to one
+    model — so the same "Published" state can back the `status` field on
+    Product, Order, or anything else that inherits BaseModel.
     """
-    name = models.CharField(max_length=100)
-    # To know which model this state belongs to (e.g., "Product" or "Order")
-    target_model = models.CharField(max_length=100, help_text="e.g., 'Product' or 'Order'")
-    
+    label = models.CharField(max_length=50, unique=True)
+    slug = models.SlugField(max_length=60, blank=True, null=True, unique=True)
+    description = models.CharField(max_length=200, blank=True, null=True)
+
+    date_created = models.DateTimeField(auto_now_add=True, null=True)
+    date_updated = models.DateTimeField(auto_now=True, null=True)
+
     class Meta:
         db_table = 'azt_workflow_states'
-        # Ensures you don't accidentally create two "Pending" states for "Product"
-        unique_together = ('name', 'target_model')
-        
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(self.label)
+        super().save(*args, **kwargs)
+
     def __str__(self):
-        return f"{self.target_model}: {self.name}"
+        return self.label
 
 # ==========================================
 # BASE MODEL

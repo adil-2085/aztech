@@ -1,0 +1,123 @@
+{% extends 'dashboard/dashboard_base.html' %}
+
+{% block title %}{% if product %}Edit Product{% else %}New Product{% endif %}{% endblock %}
+{% block page_title %}{% if product %}Edit Product{% else %}New Product{% endif %}{% endblock %}
+
+{% block content %}
+<!--
+    data-product-id is blank for a new product. dashboard.js reads this to
+    decide POST (create) vs PATCH (edit), and to know whether the
+    images/variants sections (which need a real product FK) should show.
+-->
+<div id="product-form-root" data-product-id="{% if product %}{{ product.id }}{% endif %}" class="max-w-3xl">
+
+    <form id="product-form" class="bg-white rounded-lg border border-gray-200 p-6 space-y-5">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+            <div class="sm:col-span-2">
+                <label class="block text-xs font-bold uppercase tracking-wide text-gray-500 mb-1">Title</label>
+                <input type="text" name="title" id="f-title" required
+                       class="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-black">
+            </div>
+
+            <div class="sm:col-span-2">
+                <label class="block text-xs font-bold uppercase tracking-wide text-gray-500 mb-1">Slug</label>
+                <input type="text" name="slug" id="f-slug"
+                       class="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-black">
+                <p class="text-xs text-gray-400 mt-1">Auto-filled from the title — edit only if you need a specific URL.</p>
+            </div>
+
+            <div>
+                <label class="block text-xs font-bold uppercase tracking-wide text-gray-500 mb-1">Category</label>
+                <select name="category" id="f-category" required
+                        class="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-black">
+                </select>
+            </div>
+
+            <div>
+                <label class="block text-xs font-bold uppercase tracking-wide text-gray-500 mb-1">Brand</label>
+                <select name="brand" id="f-brand"
+                        class="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-black">
+                    <option value="">— None —</option>
+                </select>
+            </div>
+
+            <div class="sm:col-span-2">
+                <label class="block text-xs font-bold uppercase tracking-wide text-gray-500 mb-1">Description</label>
+                <textarea name="description" id="f-description" rows="4" required
+                          class="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-black"></textarea>
+            </div>
+
+            <div>
+                <label class="block text-xs font-bold uppercase tracking-wide text-gray-500 mb-1">SKU</label>
+                <input type="text" name="sku" id="f-sku" required
+                       class="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-black">
+            </div>
+
+            <div>
+                <label class="block text-xs font-bold uppercase tracking-wide text-gray-500 mb-1">Status</label>
+                <select name="status" id="f-status"
+                        class="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-black">
+                </select>
+            </div>
+
+            <div>
+                <label class="block text-xs font-bold uppercase tracking-wide text-gray-500 mb-1">Price</label>
+                <input type="number" step="0.01" name="price" id="f-price" required
+                       class="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-black">
+            </div>
+
+            <div>
+                <label class="block text-xs font-bold uppercase tracking-wide text-gray-500 mb-1">Compare-at Price</label>
+                <input type="number" step="0.01" name="compare_at_price" id="f-compare-at-price"
+                       class="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-black">
+            </div>
+
+            <div>
+                <label class="block text-xs font-bold uppercase tracking-wide text-gray-500 mb-1">Cost per Item <span class="text-gray-400 normal-case font-normal">(internal only)</span></label>
+                <input type="number" step="0.01" name="cost_per_item" id="f-cost-per-item"
+                       class="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-black">
+            </div>
+
+            <div>
+                <label class="block text-xs font-bold uppercase tracking-wide text-gray-500 mb-1">Base Stock Quantity</label>
+                <input type="number" name="stock_quantity" id="f-stock-quantity" value="0"
+                       class="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-black">
+                <p class="text-xs text-gray-400 mt-1">Only used if this product has no variants below.</p>
+            </div>
+        </div>
+
+        <div class="flex items-center gap-3 pt-2">
+            <button type="submit" id="f-submit"
+                    class="bg-asos-black text-white text-sm font-bold uppercase tracking-wide px-6 py-2.5 rounded-full hover:opacity-90 transition">
+                {% if product %}Save Changes{% else %}Create Product{% endif %}
+            </button>
+            <a href="{% url 'dashboard:product-list' %}" class="text-sm text-gray-500 hover:text-asos-black">Cancel</a>
+            <span id="f-status-msg" class="text-sm"></span>
+        </div>
+    </form>
+
+    <!-- Images & Variants — only meaningful once the product exists -->
+    <div id="product-subsections" class="{% if not product %}hidden{% endif %} mt-8 grid grid-cols-1 sm:grid-cols-2 gap-6">
+
+        <div class="bg-white rounded-lg border border-gray-200 p-6">
+            <h2 class="font-bold text-sm uppercase tracking-wide mb-4">Images</h2>
+            <div id="image-list" class="grid grid-cols-3 gap-3 mb-4"></div>
+            <input type="file" id="image-upload-input" accept="image/*" multiple class="text-sm">
+        </div>
+
+        <div class="bg-white rounded-lg border border-gray-200 p-6">
+            <h2 class="font-bold text-sm uppercase tracking-wide mb-4">Variants</h2>
+            <div id="variant-list" class="space-y-2 mb-4"></div>
+            <form id="variant-add-form" class="grid grid-cols-2 gap-2">
+                <input type="text" placeholder="Attribute (e.g. Size)" id="v-attribute-name" required class="border border-gray-300 rounded-md px-2 py-1.5 text-sm">
+                <input type="text" placeholder="Value (e.g. M)" id="v-attribute-value" required class="border border-gray-300 rounded-md px-2 py-1.5 text-sm">
+                <input type="text" placeholder="SKU" id="v-sku" required class="border border-gray-300 rounded-md px-2 py-1.5 text-sm">
+                <input type="number" placeholder="Stock" id="v-stock-quantity" required class="border border-gray-300 rounded-md px-2 py-1.5 text-sm">
+                <button type="submit" class="col-span-2 bg-gray-100 hover:bg-gray-200 text-sm font-semibold rounded-md py-1.5">+ Add Variant</button>
+            </form>
+        </div>
+
+    </div>
+
+</div>
+{% endblock %}

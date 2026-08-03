@@ -1,0 +1,38 @@
+{% extends 'dashboard/dashboard_base.html' %}
+
+{% block title %}Products{% endblock %}
+{% block page_title %}Products{% endblock %}
+
+{% block content %}
+<div id="product-management-root">
+
+    <div class="flex justify-between items-center mb-6">
+        <p class="text-sm text-gray-500">Add, edit, and remove products in the catalog.</p>
+        <a href="{% url 'dashboard:product-create' %}"
+           class="bg-asos-black text-white text-sm font-bold uppercase tracking-wide px-5 py-2.5 rounded-full hover:opacity-90 transition">
+            + Add Product
+        </a>
+    </div>
+
+    <div class="bg-white rounded-lg border border-gray-200 overflow-hidden">
+        <table class="w-full text-sm">
+            <thead class="bg-gray-50 text-gray-500 uppercase text-xs">
+                <tr>
+                    <th class="text-left px-4 py-3 font-semibold"></th>
+                    <th class="text-left px-4 py-3 font-semibold">Title</th>
+                    <th class="text-left px-4 py-3 font-semibold">Category</th>
+                    <th class="text-left px-4 py-3 font-semibold">Price</th>
+                    <th class="text-left px-4 py-3 font-semibold">Stock</th>
+                    <th class="text-left px-4 py-3 font-semibold">Status</th>
+                    <th class="text-right px-4 py-3 font-semibold">Actions</th>
+                </tr>
+            </thead>
+            <tbody id="product-table-body" class="divide-y divide-gray-100">
+                <!-- Rows injected by dashboard.js -->
+                <tr><td colspan="7" class="px-4 py-8 text-center text-gray-400">Loading products…</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+</div>
+{% endblock %}

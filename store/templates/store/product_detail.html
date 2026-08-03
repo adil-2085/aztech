@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ product.title }} — {{ store_settings.brand_name|default:"Loom" }}{% endblock %}
+
+{% block content %}
+<!--
+    This page is intentionally a thin shell: `data-product-slug` is the only
+    thing the server renders about the product itself. main.js fetches the
+    real payload from /api/products/<slug>/detail/ and fills everything in —
+    keeping this page's HTML the same regardless of which product it's for.
+-->
+<div id="product-detail-root" data-product-slug="{{ product.slug }}" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
+
+        <!-- Gallery -->
+        <div>
+            <div class="aspect-3-4 bg-gray-100 rounded-md overflow-hidden">
+                <img id="gallery-main-image" src="" alt="" class="w-full h-full object-cover">
+            </div>
+            <div id="gallery-thumbs" class="flex gap-3 mt-4 overflow-x-auto no-scrollbar">
+                <!-- Thumbnails injected by main.js -->
+            </div>
+        </div>
+
+        <!-- Info -->
+        <div>
+            <p id="pd-brand" class="text-xs font-bold uppercase tracking-widest text-gray-500"></p>
+            <h1 id="pd-title" class="text-2xl sm:text-3xl font-black tracking-tight mt-1"></h1>
+
+            <div class="flex items-baseline gap-3 mt-4">
+                <span id="pd-price" class="text-xl font-bold"></span>
+                <span id="pd-compare-price" class="text-sm text-gray-400 line-through hidden"></span>
+            </div>
+
+            <p id="pd-description" class="text-sm text-gray-600 mt-6 leading-relaxed"></p>
+
+            <!-- Variant selector — hidden entirely for products with no variants -->
+            <div id="pd-variants" class="mt-8 hidden">
+                <p class="text-xs font-bold uppercase tracking-wide mb-2">Size</p>
+                <div id="pd-variant-options" class="flex gap-2 flex-wrap"></div>
+                <p id="pd-variant-stock" class="text-xs text-gray-500 mt-2"></p>
+            </div>
+
+            <!-- Cart isn't built yet — this is a placeholder for the Cart & Checkout window -->
+            <button id="pd-add-to-cart" disabled
+                class="mt-8 w-full bg-gray-300 text-gray-500 font-bold uppercase tracking-wide text-sm py-3.5 rounded-full cursor-not-allowed">
+                Add to Bag — Coming Soon
+            </button>
+        </div>
+
+    </div>
+</div>
+{% endblock %}
