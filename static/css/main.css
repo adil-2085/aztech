@@ -43,3 +43,23 @@ transition: background-color 0.3s ease, border-color 0.3s ease;
 header.scrolled {
 box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
 }
+
+/* Product Gallery — thumbnail active state (Product Catalog window) */
+.gallery-thumb {
+transition: border-color 0.2s ease, opacity 0.2s ease;
+opacity: 0.7;
+}
+.gallery-thumb:hover {
+opacity: 1;
+}
+.gallery-thumb.active {
+border-color: var(--brand-secondary);
+opacity: 1;
+}
+
+/* Product Variant Selector — selected swatch state (Product Catalog window) */
+.variant-swatch.selected {
+border-color: var(--brand-secondary);
+background-color: var(--brand-secondary);
+color: white;
+}

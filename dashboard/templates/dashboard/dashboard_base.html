@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Dashboard{% endblock %} — {{ store_settings.brand_name|default:"Loom" }} ERP</title>
+
+    {% load static %}
+
+    <!-- Same DB-driven CSS variable pattern as the storefront's base.html -->
+    <style>
+        :root {
+            --brand-primary: {{ store_settings.primary_color|default:"#d01345" }};
+            --brand-secondary: {{ store_settings.secondary_color|default:"#2d2d2d" }};
+        }
+    </style>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Inter', 'system-ui', 'sans-serif'] },
+                    colors: {
+                        'asos-red': 'var(--brand-primary)',
+                        'asos-black': 'var(--brand-secondary)',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <link rel="stylesheet" href="{% static 'css/main.css' %}">
+    {% block extra_head %}{% endblock %}
+</head>
+<body class="font-sans bg-gray-50 text-asos-black min-h-screen flex">
+    <!-- Presence of this tag (even outside a <form>) is what makes Django set the
+         csrftoken cookie on the response — dashboard.js's fetch() calls depend on it. -->
+    {% csrf_token %}
+
+    <!-- Sidebar -->
+    <aside class="w-56 bg-white border-r border-gray-200 flex-shrink-0 hidden sm:flex flex-col">
+        <div class="h-16 flex items-center px-6 border-b border-gray-200">
+            <span class="font-black tracking-tight">{{ store_settings.brand_name|default:"Loom" }}</span>
+            <span class="text-xs text-gray-400 ml-2">ERP</span>
+        </div>
+        <nav class="flex-1 px-3 py-4 space-y-1">
+            <a href="{% url 'dashboard:product-list' %}"
+               class="block px-3 py-2 rounded-md text-sm font-semibold {% if request.resolver_match.url_name == 'product-list' %}bg-asos-black text-white{% else %}text-gray-600 hover:bg-gray-100{% endif %}">
+                Products
+            </a>
+            <!-- Future ERP windows (Orders, Procurement, etc.) register here -->
+        </nav>
+    </aside>
+
+    <!-- Main -->
+    <div class="flex-1 flex flex-col min-w-0">
+        <header class="h-16 bg-white border-b border-gray-200 flex items-center justify-between px-6">
+            <h1 class="text-lg font-bold">{% block page_title %}Dashboard{% endblock %}</h1>
+            <div class="flex items-center gap-4 text-sm">
+                <span class="text-gray-500">{{ request.user.get_username }}</span>
+                <a href="/admin/logout/" class="text-gray-500 hover:text-asos-black">Log out</a>
+            </div>
+        </header>
+        <main class="flex-1 p-6 overflow-y-auto">
+            {% block content %}{% endblock %}
+        </main>
+    </div>
+
+    <script>
+        // CSRF header helper, shared by every dashboard page's fetch() calls.
+        function getCookie(name) {
+            const match = document.cookie.match('(^|;)\\s*' + name + '\\s*=\\s*([^;]+)');
+            return match ? decodeURIComponent(match[2]) : null;
+        }
+        const CSRF_TOKEN = getCookie('csrftoken');
+    </script>
+    <script src="{% static 'js/dashboard.js' %}"></script>
+    {% block extra_scripts %}{% endblock %}
+</body>
+</html>
