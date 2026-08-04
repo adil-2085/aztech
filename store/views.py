@@ -55,3 +55,5 @@ def product_detail(request, slug):
     then lets main.js fetch the full detail payload from the API above."""
     product = get_object_or_404(Product, slug=slug, status__label='Published')
     return render(request, 'store/product_detail.html', {'product': product})
+
+    
